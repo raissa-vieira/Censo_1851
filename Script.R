@@ -5,6 +5,8 @@ library(readxl)
 library(tidyr)
 library(ggplot2)
 library(ggthemes)
+library(patchwork)
+
 censo_1851<-read_excel("data-raw/censo1851-profissoes-mulheres.xlsx")
 
 censo_menos_total<- subset(censo_1851, !Occupations=="Total of Females")
@@ -28,7 +30,7 @@ grafico_menos_20<-censo_todas_idades%>%
   mutate(Occupations=forcats::fct_reorder(Occupations,`Under 20 years`))%>%
   ggplot()+
   geom_col(aes(x = Occupations, y = `Under 20 years`))+
-  scale_y_continuous() +
+  scale_y_continuous(labels = scales::unit_format(unit = "milhões", scale = 1e-6)) +
   coord_flip() +
   labs(x = "Ocupação", y = "Quantidade") +
   theme_economist()
@@ -45,4 +47,4 @@ grafico_mais_20<-censo_todas_idades%>%
   theme_economist()
 grafico_mais_20
 
-
+grafico_menos_20+grafico_mais_20
